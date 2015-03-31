@@ -1,4 +1,3 @@
-# Codes write in VBA 
-# By Alessandro Rezende
+# Codes write in VBA
 
 All codes write in VBA - Visual Basic For Application
