@@ -1,0 +1,80 @@
+Enter file contents here
+
+
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui"> 
+	<commands> 
+        	<command idMso="Help" enabled="false" />
+        	<command idMso="FileNewDatabase" enabled="false" />
+        	<command idMso="FileOpenDatabase" enabled="false" />
+        	<command idMso="FileSaveAsMenuAccess" enabled="false" />
+        	<command idMso="FileSave" enabled="false" />
+        	<command idMso="FileSaveAs" enabled="false" />
+        	<command idMso="FileManageMenu" enabled="false"/>
+        	<command idMso="FilePrintMenu" enabled="false" />
+        	<command idMso="MenuPublish" enabled="false" />
+        	<command idMso="FileSendAsAttachment" enabled="false" />
+         	<command idMso="FileCloseDatabase" enabled="false" />
+         	<command idMso="ApplicationOptionsDialog" enabled="false" />
+         	<command idMso="FileExit" enabled="false" />
+         	<command idMso="SourceControlCreateDatabaseFromProject" enabled="false" />
+         	<command idMso="PrintDialogAccess" enabled="false" />
+         	<command idMso="FilePrintQuick" enabled="false" />
+         	<command idMso="FilePrintPreview" enabled="false" />
+         	<command idMso="PrintCategory" enabled="false" />
+         	<command idMso="ToolsForWorkingWithOffice" enabled="false" />
+         	<command idMso="SaveObjectAs" enabled="false" />
+         	<command idMso="AdvertisePublishAs" enabled="false" />
+         	<command idMso="DatabaseMakeMdeFile" enabled="false" />
+         	<command idMso="FileDatabaseProperties" enabled="false" />
+         	<command idMso="DatabasePermissions" enabled="false" />
+         	<command idMso="MinimizeRibbon" enabled="false" />
+         	<command idMso="SubformMenu" enabled="false" />
+         	<command idMso="FileOpenDatabase" enabled="false" />
+         	<command idMso="FileNewDatabase" enabled="false" />
+         	<command idMso="FileSaveAs" enabled="false" />
+         	<command idMso="MenuPublish" enabled="false" />
+         	<command idMso="FileSaveAsMenuAccess" enabled="false" />
+         	<command idMso="FilePublishToSharePoint" enabled="false" />
+         	<command idMso="FileOpenDatabase" enabled="false" />
+         </commands>
+         
+  <ribbon startFromScratch="true">
+  
+     <officeMenu>
+     	      	<button idMso="FileOpenDatabase" visible="false"/>
+     	      	<button idMso="FileNewDatabase" visible="false"/>
+     	      	<button idMso="FileSaveAs" visible="false"/>
+     	      	<button idMso="MenuPublish" visible="false"/>
+     	      	<splitButton idMso="FileSaveAsMenuAccess" visible="false" />
+     	      	<button idMso="FilePublishToSharePoint" visible="false"/>
+     	      	<button idMso="FileOpenDatabase" visible="false"/>
+     	      	<button idMso="FileOpenRecentFile" visible="false"/>
+     	      	<button idMso="FileNewDatabase" visible="false"/>
+     	      	<button idMso="FileSaveAsCurrentFileFormat" visible="false"/>
+     </officeMenu>
+     
+    <tabs>
+    	<tab idMso="TabPrintPreviewAccess" visible="false" />
+    	<tab idMso="TabHomeAccess" visible="false" />
+    	<tab idMso="TabExternalData" visible="false" />
+    	<tab idMso="TabDatabaseTools" visible="false" />
+    	<tab idMso="TabSourceControl" visible="false" />
+    	<tab idMso="TabAddIns" visible="false" />
+    	<tab idMso="TabCreate" visible="false" />
+    	<tab id="Home" label="Menu" visible="true">
+    
+		<group id="dbCustomGroup1" label="Opções">
+		    <toggleButton id="tglHomeForm" size="large" imageMso="FileDocumentEncrypt"
+			  label="Acesso" onAction="abrirFormLogin" description = "Acessar tela principal do sistema" />
+		    <toggleButton id="tglInfForm" size="large" imageMso="Info"
+		    label="Informação" onAction="abrirFormInformacao" description = "Informações do sistema"/>
+    </group>
+	    	
+    <group id="dbCustomGroup2" label="Banco de dados">
+	    	<button idMso="FileBackupDatabase" visible="true"/>
+	    	<button idMso="FileCompactAndRepairDatabase" visible="true"/>
+    </group>
+    </tab>
+    </tabs>
+  </ribbon>
+</customUI>
