@@ -1,5 +1,4 @@
-Enter file contents here
-
+#Ribbon
 
 <customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui"> 
 	<commands> 
