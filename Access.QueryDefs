@@ -1,0 +1,14 @@
+# Access - open recordset with QueryDefs
+
+dim db as DAO.database
+Set banco = CurrentDb
+
+Set Query = banco.QueryDefs("NameQuery")
+Set record = Query.OpenRecordset
+
+While (record.EOF = False)
+
+  record![NAME_COLUMN]
+  
+record.MoveNext
+Wend
