@@ -1,0 +1,7 @@
+# VBA - How to declare variables in VBA
+
+Dim nameVar as String
+
+Public Const nameVar  as String = "values"
+
+Global nameVar as String
