@@ -1,0 +1,32 @@
+# Access - Select in table
+
+Public Function getValues()
+    On Error GoTo ShowError
+    
+    Dim db As DAO.Database
+    Dim strSQL As String
+    Dim find as Boolean
+  
+    Set db = OpenDatabase(pathDB)
+  
+    strSQL = "SELECT * " _
+        & "FROM nameTable AS a "
+
+    Set record = banco.OpenRecordset(strSQL, dbOpenDynaset)
+    
+    If record.RecordCount > 0 Then
+        find = True
+    Else
+        find = False
+    End If
+
+etValues = find
+Exit Function
+ShowError:
+    If Err.Number <> 0 Then
+        Dim msg As String
+        msg = "Erro # " & Str(Err.Number) & " foi gerado por " & Err.Source & Chr(13) & Err.Description
+        MsgBox msg, , "Erro", Err.HelpFile, Err.HelpContext
+        Resume Next
+    End If
+End Function
