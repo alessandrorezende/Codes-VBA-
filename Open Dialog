@@ -1,0 +1,64 @@
+# Open Dialog
+
+Attribute VB_Name = "openDialog"
+Option Compare Database
+
+Private Declare Function GetOpenFileName Lib "comdlg32.dll" Alias _
+"GetOpenFileNameA" (pOpenfilename As OPENFILENAME) As Long
+
+Global caminhoDiretorio As String
+
+Private Type OPENFILENAME
+    lStructSize As Long
+    hwndOwner As Long
+    hInstance As Long
+    lpstrFilter As String
+    lpstrCustomFilter As String
+    nMaxCustFilter As Long
+    nFilterIndex As Long
+    lpstrFile As String
+    nMaxFile As Long
+    lpstrFileTitle As String
+    nMaxFileTitle As Long
+    lpstrInitialDir As String
+    lpstrTitle As String
+    flags As Long
+    nFileOffset As Integer
+    nFileExtension As Integer
+    lpstrDefExt As String
+    lCustData As Long
+    lpfnHook As Long
+    lpTemplateName As String
+End Type
+
+Function openFileDialog(strform As Form) As String
+'funcao para abrir caixa onde seleciona arquivo
+'input:formulario
+'output:nome do diretorio
+    Dim OpenFile As OPENFILENAME
+    Dim lReturn As Long
+    Dim sFilter As String
+    OpenFile.lStructSize = Len(OpenFile)
+    OpenFile.hwndOwner = strform.hWnd
+    sFilter = "Arquivo Txt (*.txt)" & Chr(0) & "*.txt" & Chr(0)
+    'sFilter = "All Files (*.*)" & Chr(0) & "*.*" & Chr(0) & _
+    '  "JPEG Files (*.JPG)" & Chr(0) & "*.JPG" & Chr(0)
+    OpenFile.lpstrFilter = sFilter
+    OpenFile.nFilterIndex = 1
+    OpenFile.lpstrFile = String(257, 0)
+    OpenFile.nMaxFile = Len(OpenFile.lpstrFile) - 1
+    OpenFile.lpstrFileTitle = OpenFile.lpstrFile
+    OpenFile.nMaxFileTitle = OpenFile.nMaxFile
+    ' Define o disco de procura
+    OpenFile.lpstrInitialDir = CStr(Application.CurrentProject.Path)
+    ' Define o Títuloo (Caption) da Tela
+    OpenFile.lpstrTitle = "Selecione o arquivo"
+    OpenFile.flags = 0
+    lReturn = GetOpenFileName(OpenFile)
+        If lReturn = 0 Then
+            'MsgBox "Nenhum arquivo foi selecionado!", vbInformation, "Mensagem"
+         Else
+            ' Retorna o caminho do arquivo
+            openFileDialog = Trim(Left(OpenFile.lpstrFile, InStr(1, OpenFile.lpstrFile, vbNullChar) - 1))
+         End If
+End Function
