@@ -1,0 +1,7 @@
+# Refrash link data base Access
+
+dim db as DAO.database
+set db = CurrentDb
+
+db.TableDefs("TABLE NAME").Connect = "MS Access;DATABASE=" & path & "OTHER DB.mdb" 
+db.TableDefs("TABLE NAME").RefreshLink
