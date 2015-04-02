@@ -1,0 +1,350 @@
+#Calendar
+
+Attribute VB_Name = "Calendar"
+Option Compare Database
+
+'Sub teste()
+'Dim teste As String
+'teste = RegExpReplace("alessandro12345", "^ +| +$|\\n|/n| |[^0-9 ]", "z", False, False)
+'Debug.Print teste
+'    Dim data1 As Date
+'    Dim data2 As Date
+'    data1 = CDate("06/01/2014")
+'    data2 = CDate("06/09/2014")
+'    Debug.Print diasCorridos(data1, data2)
+''    Debug.Print diasUteis(data1, data2)
+''    Debug.Print getDataFinal(data1, 30)
+''    Debug.Print getRegex()
+'End Sub
+
+Function getDataFinal(BegDate As Variant, intervalo As Integer) As Date
+'description: Função para retornar uma data resultante da BegDate + intervalo
+'input: BegDate:03/11/2014, interval: 30
+'output:04/22/2014
+
+   Dim DateProx As Variant
+   Dim contador As Integer
+         
+   On Error GoTo Err_Get_Age
+
+   BegDate = DateValue(BegDate)
+   contador = 0
+    
+   Do While contador < intervalo
+    If (format(BegDate, "ddd") <> "Sun" And _
+        format(BegDate, "ddd") <> "Sat") Then
+            DateProx = DateAdd("d", 1, BegDate)
+        If (format(DateProx, "ddd") <> "Sun" And _
+            format(DateProx, "ddd") <> "Sat") Then
+            BegDate = DateAdd("d", 1, BegDate)
+        Else
+            BegDate = DateAdd("d", 2, DateProx)
+        End If
+        contador = contador + 1
+    Else
+        BegDate = DateAdd("d", 1, BegDate)
+        contador = contador + 1
+    End If
+    
+   Loop
+   getDataFinal = BegDate
+Exit Function
+Err_Get_Age:
+    ' Se BegDate or EndDate is Null, retorne zero
+    ' para indicar que não há dia de trabalho passado entre as duas datas.
+    If Err.Number = 94 Then
+        Work_Days = 0
+        Exit Function
+    Else
+        ' Se algum outro erro ocorrer, mostra a mensagem.
+        MsgBox "Error " & Err.Number & ": " & Err.Description
+    End If
+End Function
+
+Function diasUteis(BegDate As Variant, EndDate As Variant) As Integer
+'description: número de dias uteis entre duas datas
+'input: data inicial, data final
+'output: número de dias
+
+   Dim WholeWeeks As Variant
+   Dim DateCnt As Variant
+   Dim EndDays As Integer
+         
+   On Error GoTo Err_Work_Days
+
+   BegDate = DateValue(BegDate)
+   If EndDate = "00:00:00" Then
+        EndDate = DateValue(Date)
+   Else
+        EndDate = DateValue(EndDate)
+   End If
+   
+   WholeWeeks = DateDiff("w", BegDate, EndDate)
+   DateCnt = DateAdd("ww", WholeWeeks, BegDate)
+   EndDays = 0
+
+   Do While DateCnt <= EndDate
+      If format(DateCnt, "ddd") <> "Sun" And _
+        format(DateCnt, "ddd") <> "Sat" Then
+         EndDays = EndDays + 1
+      End If
+      DateCnt = DateAdd("d", 1, DateCnt)
+   Loop
+
+diasUteis = WholeWeeks * 5 + EndDays
+Exit Function
+Err_Work_Days:
+    ' Se BegDate or EndDate is Null, retorne zero
+    ' para indicar que não há dia de trabalho passado entre as duas datas.
+    If Err.Number = 94 Then
+        diasUteis = 0
+    Exit Function
+    Else
+        ' Se algum outro erro ocorrer, mostra a mensagem.
+        MsgBox "Error " & Err.Number & ": " & Err.Description
+    End If
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Function diasCorridos(BegDate As Variant, EndDate As Variant) As Integer
+'description: número de dias corridos entre duas datas
+'input: data inicial, data final
+'output: número de dias
+
+   Dim dayOfWeeks As Variant
+   Dim DateCnt As Variant
+   Dim EndDays As Integer
+         
+   On Error GoTo Err_Work_Days
+
+   BegDate = DateValue(BegDate)
+   If EndDate = "00:00:00" Then
+        EndDate = DateValue(Date)
+   Else
+        EndDate = DateValue(EndDate)
+   End If
+   
+   dayOfWeeks = DateDiff("d", BegDate, EndDate)
+
+diasCorridos = dayOfWeeks
+Exit Function
+Err_Work_Days:
+    ' Se BegDate or EndDate is Null, retorne zero
+    ' para indicar que não há dia de trabalho passado entre as duas datas.
+    If Err.Number = 94 Then
+        diasCorridos = 0
+    Exit Function
+    Else
+        ' Se algum outro erro ocorrer, mostra a mensagem.
+        MsgBox "Error " & Err.Number & ": " & Err.Description
+    End If
+End Function
+
+
+Public Function isDomingo(ByVal data As Date) As Boolean
+'description: Função para saber se é domingo
+'input:
+'output:
+    Dim numeroDia As Integer
+    Dim encontrado As Boolean
+    numeroDia = diaDaSemana(data)
+    
+    If numeroDia = vbSunday Then
+        encontrado = True
+    End If
+
+isDomingo = encontrado
+End Function
+
+Public Function diaDaSemana(ByVal data As Date) As String
+'description: Função que retorna o dia da semana
+'input:
+'output:
+
+    Dim numeroDia As Integer
+    numeroDia = Weekday(data)
+    
+diaDaSemana = numeroDia
+End Function
+
+
+Public Function getDiaAnterior(diaNumeral, mesNumeral, anoNumeral) As String
+'description: Função que retorna o dia anterior
+'input:
+'output:
+
+    Dim lData As Date
+    lData = DateSerial(CInt(anoNumeral), CInt(mesNumeral), CInt(diaNumeral) - 1)
+
+getDiaAnterior = CStr(lData)
+End Function
+
+Public Function getProximoDia(diaNumeral, mesNumeral, anoNumeral) As String
+'description: Função que retorna o proximo dia
+'input:
+'output:
+
+    Dim lData As Date
+    lData = DateSerial(CInt(anoNumeral), CInt(mesNumeral), CInt(diaNumeral) + 1)
+
+getProximoDia = CStr(lData)
+End Function
+
+
+Public Function ultimoDiaDoMes(mesNumeral, anoNumeral) As String
+'description: Função que retorna a ultima data do mês
+'input: 6,2014
+'output: 06/31/2014
+
+    Dim lData As Date
+    lData = DateSerial(CInt(anoNumeral), CInt(mesNumeral) + 1, 1 - 1)
+
+ultimoDiaDoMes = CStr(lData)
+End Function
+
+Public Function intervaloDeDatas(data1 As Date, data2 As Date, intervaloDatas() As Variant, size As Long) As Boolean
+'description: Função que retorna todas as datas de um intervalo
+'input:
+'output: data1,data1.1.....
+
+    Dim lData As Date
+    Dim date1Temp As String
+    Dim data1Dia As String
+    Dim data1Mes As String
+    Dim data1Ano As String
+    
+    size = 0
+    While data1 <= data2
+        date1Temp = CStr(data1)
+        data1Dia = Mid(date1Temp, 4, 2)
+        data1Mes = Mid(date1Temp, 1, 2)
+        data1Ano = Mid(date1Temp, 7, 4)
+    
+        ReDim Preserve intervaloDatas(0 To size) As Variant
+        intervaloDatas(UBound(intervaloDatas)) = data1
+        lData = DateSerial(CInt(data1Ano), CInt(data1Mes), CInt(data1Dia) + 1)
+        data1 = lData
+        size = size + 1
+    Wend
+intervaloDeDatas = True
+End Function
+
+
+Public Function encontrarPosicaoData(data As Date, record As DAO.Recordset) As Integer
+'description: Função que verifica se a data esta no intervalo
+'input:
+'output:
+
+    Dim encontrou As Boolean
+    Dim posicao As Integer
+    
+    encontrou = False
+    record.MoveFirst
+    While (record.EOF = False)
+        If data = record![dataRelatorio] Then
+            encontrou = True
+            GoTo ok
+        End If
+    record.MoveNext
+    Wend
+    
+ok:
+encontrarPosicaoData = encontrou
+End Function
+
+
+Public Function mesNumeral(mesPorExtenso) As String
+'description:
+'input: Janeiro
+'output: 01
+
+    Dim mes As String
+    
+    If mesPorExtenso = "Janeiro" Then
+        mes = "01"
+    ElseIf mesPorExtenso = "Fevereiro" Then
+        mes = "02"
+    ElseIf mesPorExtenso = "Março" Then
+        mes = "03"
+    ElseIf mesPorExtenso = "Abril" Then
+        mes = "04"
+    ElseIf mesPorExtenso = "Maio" Then
+        mes = "05"
+    ElseIf mesPorExtenso = "Junho" Then
+        mes = "06"
+    ElseIf mesPorExtenso = "Julho" Then
+        mes = "07"
+    ElseIf mesPorExtenso = "Agosto" Then
+        mes = "08"
+    ElseIf mesPorExtenso = "Setembro" Then
+        mes = "09"
+    ElseIf mesPorExtenso = "Outubro" Then
+        mes = "10"
+    ElseIf mesPorExtenso = "Novembro" Then
+        mes = "11"
+    ElseIf mesPorExtenso = "Dezembro" Then
+        mes = "12"
+    End If
+mesNumeral = mes
+End Function
+
+
+'Public Function Util(DataAbreviada As Date) As Boolean
+'Dim feriados(757) As Date
+'
+'Dim t As Integer
+'Dim k As Integer
+'Dim M As Integer
+'
+'feriados(1) = #1/1/2014#
+'feriados(2) = #2/26/2001#
+'feriados(3) = #2/27/2001#
+'feriados(4) = #4/13/2001#
+'feriados(5) = #5/1/2001#
+'feriados(6) = #6/14/2001#
+'feriados(7) = #9/7/2001#
+'feriados(8) = #10/12/2001#
+'
+'
+'
+'  If Weekday(DataAbreviada) = 1 Or Weekday(DataAbreviada) = 7 Then
+'      k = 1
+'     Else
+'      k = 0
+'   End If
+'
+'
+'   For t = 1 To 757
+'     If Holidays(t) = CDate(DataAbreviada) Then
+'           M = 1
+'     Else
+'           M = 0
+'     End If
+'   Next t
+'
+'   If k + M = 0 Then
+'   Util = True
+'   Else
+'   Util = False
+'   End If
+'
+'
+'End Function
+
+'Public Function getAgeOLD(npdRetrievalRequest) As Integer
+'
+''A função DateAdd não retorna uma data inválida.
+''O exemplo a seguir adiciona um mês a 31 de janeiro:
+'Dim data As Date
+'Dim numeroDia As Integer
+'Dim diaDoMes As Integer
+'
+'
+''retorna o numero do dia da semana 1-7
+'numeroDia = Format(npdRetrievalRequest, "w")
+''retorna o numero do dia no mes 1 -31
+'diaDoMes = Day(npdRetrievalRequest)
+'
+'getAge = diaDoMes
+'
+'End Function
