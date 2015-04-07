@@ -1,0 +1,23 @@
+'DICTIONARY Example
+Sub DictBasics()
+    Dim Dict As Variant, eachkey As Variant
+
+    'Creation
+    Set Dict = CreateObject("Scripting.Dictionary")
+
+    'Addition
+    Dict.Add "Key", "Value"
+    Dict.Add "Key2", "Value2"
+    
+    'Update
+    Dict("Key2") = "Value3"
+
+    'Retrieval
+    For Each eachkey In Dict
+        Debug.Print "Key: " & eachkey
+        Debug.Print "Value: " & Dict(eachkey)
+    Next
+    
+    'Reset
+    Dict.RemoveAll
+End Sub
