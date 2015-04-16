@@ -38,3 +38,18 @@ Public Function binarytostring(ByVal mystring, ByVal maxlength) As String
     binarytostring = my_string
 
 End Function
+
+Public Function rev(ByVal mybinary)
+' mod 1 to 0 and reverse
+'
+    For x = 1 To 8
+        a = Mid$(mybinary, x, 1)
+        If a = 1 Then
+            a = 0
+        Else
+            a = 1
+        End If
+        temp = temp & a
+    Next x
+    rev = temp
+End Function
