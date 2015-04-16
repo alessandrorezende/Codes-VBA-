@@ -1,0 +1,40 @@
+Public Function stringtobinary(ByVal mystring, ByVal maxlength) As String
+    Dim Filter As Integer
+    For x = 1 To maxlength
+        Filter = 1
+        tempascii = Asc(Mid$(mystring, x, 1))
+        For y = 1 To 8
+            tempbit = tempascii And Filter
+            If tempbit > 0 Then
+                binary_string = 1 & binary_string
+            Else
+                binary_string = 0 & binary_string
+            End If
+            Filter = Filter * 2
+        Next y
+        temp = binary_string
+        temp = rev(temp)
+    Next x
+    stringtobinary = temp
+End Function
+
+Public Function binarytostring(ByVal mystring, ByVal maxlength) As String
+    Dim binarystring As String
+    Dim place As Integer
+    Dim Letter As String
+    Dim my_string As String
+    Dim total As Integer
+    place = 128
+    For x = 1 To Len(mystring) Step 8
+        binarystring = rev(Mid$(mystring, x, 8))
+        For y = 1 To 8
+            total = total + Mid$(binarystring, y, 1) * place
+            place = place / 2
+        Next y
+        place = 128
+        my_string = my_string & Chr(total)
+        total = 0
+    Next x
+    binarytostring = my_string
+
+End Function
