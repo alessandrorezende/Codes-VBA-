@@ -1,0 +1,44 @@
+Public Function stringtooctal(ByVal mystring, ByVal maxlength) As String
+    Dim tempascii As Integer
+    Dim tempbit As Integer
+    Dim binary_string As String
+    Dim Filter As Integer
+    
+    For x = 1 To maxlength
+        Filter = 7
+        tempascii = Asc(Mid$(mystring, x, 1))
+        For y = 1 To 3
+            tempbit = tempascii And Filter
+            If tempbit > 0 Then
+                binary_string = (7 * tempbit / Filter) & binary_string
+            Else
+                binary_string = 0 & binary_string
+            End If
+            Filter = Filter * 8
+        Next y
+         stringtooctal = stringtooctal & binary_string
+        binary_string = ""
+    Next x
+End Function
+
+Public Function octaltostring(ByVal mystring, ByVal maxlength) As String
+    Dim binarystring As String
+    Dim place As Integer
+    Dim Letter As String
+    Dim my_string As String
+    Dim total As Integer
+    
+    place = 64
+    For x = 1 To Len(mystring) Step 3
+        binarystring = Mid$(mystring, x, 3)
+        For y = 1 To 3
+            total = total + Mid$(binarystring, y, 1) * place
+            place = place / 8
+        Next y
+        place = 64
+        my_string = my_string & Chr(total)
+        total = 0
+    Next x
+    octaltostring = my_string
+
+End Function
