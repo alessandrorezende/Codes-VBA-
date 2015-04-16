@@ -1,0 +1,57 @@
+Public Function encrypts(ByVal mystring, ByVal MySeed) As String
+' Encrypt a word
+'
+'
+    Dim temp As String
+    Dim tempascii As Integer
+    Dim tempstring As String
+    
+On Error GoTo err:
+
+    mystring = Trim(mystring)
+    
+    For x = 1 To Len(mystring)
+        temp = Mid$(mystring, x, 1)
+        tempascii = Asc(temp)
+        tempascii = tempascii + MySeed
+        tempstring = tempstring & Chr(tempascii)
+    Next x
+    
+err:
+    encrypts = tempstring
+End Function
+
+Public Function decrypts(ByVal mystring, ByVal MySeed) As String
+    Dim temp As String
+    Dim tempascii As Integer
+    Dim tempstring As String
+On Error GoTo err:
+
+    mystring = Trim(mystring)
+    
+    For x = 1 To Len(mystring)
+        temp = Mid$(mystring, x, 1)
+        tempascii = Asc(temp)
+        tempascii = tempascii - MySeed
+        tempstring = tempstring & Chr(tempascii)
+    Next x
+    
+err:
+    decrypts = tempstring
+End Function
+
+
+Sub TEST()
+' Test of function about encrypt data
+'
+'
+    Dim encryptWORD As String
+    Dim decryptWORD As String
+    
+    encryptWORD = encrypts("alessandro", 10)
+    Debug.Print encryptWORD
+    decryptWORD = decrypts(encryptWORD, 10)
+    Debug.Print decryptWORD
+    
+
+End Sub
