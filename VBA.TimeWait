@@ -1,0 +1,13 @@
+# Wait 10 seconds
+
+Function TimeWait(seconds as integer)
+  Dim newHour, newMinute, newSecond as Variant
+  
+  newHour = Hour(Now())
+  newMinute = Minute(Now())
+  newSecond = Second(Now()) + seconds
+  
+  waitTime = TimeSerial(newHour, newMinute, newSecond)
+  Application.Wait waitTime
+
+endf Function
