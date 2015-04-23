@@ -1,0 +1,21 @@
+Function accessBackup() As Boolean
+
+    Dim Source As String
+    Dim Target As String
+    Dim retval As Integer
+
+    Source = CurrentDb.Name
+
+    Target = "Z:\My Apps\Backups\YourFielName"
+    Target = Target & Format(Date, "mm-dd") & "   "
+    Target = Target & Format(Time, "hh-mm") & ".accdb"
+
+    ' create the backup
+    retval = 0
+    Dim objFSO As Object
+    
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    retval = objFSO.CopyFile(Source, Target, True)
+    Set objFSO = Nothing
+
+End Function
