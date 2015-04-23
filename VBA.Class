@@ -1,0 +1,44 @@
+Private idAmex, nome, email, tipoPerfil As String
+Private codPerfil, ativo As Integer
+
+Public Property Get getIdAmex() As String
+    getIdAmex = idAmex
+End Property
+Public Property Let setIdAmex(value As String)
+    idAmex = value
+End Property
+
+Public Property Get getNome() As String
+    getNome = nome
+End Property
+Public Property Let setNome(value As String)
+    nome = value
+End Property
+
+Public Property Get getEmail() As String
+    getEmail = email
+End Property
+Public Property Let setEmail(value As String)
+    email = value
+End Property
+
+Public Property Get getCodPerfil() As String
+    getCodPerfil = codPerfil
+End Property
+Public Property Let setCodPerfil(value As String)
+    codPerfil = value
+End Property
+
+Public Property Get getTipoPerfil() As String
+    getTipoPerfil = tipoPerfil
+End Property
+Public Property Let setTipoPerfil(value As String)
+    tipoPerfil = value
+End Property
+
+Public Property Get getAtivo() As String
+    getAtivo = ativo
+End Property
+Public Property Let setAtivo(value As String)
+    ativo = value
+End Property
