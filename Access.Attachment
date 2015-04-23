@@ -1,0 +1,38 @@
+
+Public Function inserirAnexo(diretorio) As Boolean
+    Dim db As DAO.Database
+    Dim record As DAO.Recordset
+    
+    Set db = CurrentDb()
+    ' Instantiate the parent recordset.
+    ' Set recordSetAnexo = db.OpenRecordset("anexo")
+    Set record = db.OpenRecordset("SELECT evidencia FROM anexo WHERE codigo=13", dbOpenDynaset)
+    '… Code to move to desired employee
+    ' Activate edit mode.
+    record.Edit
+    ' Instantiate the child recordset.
+    Set rsPictures = record.Fields("evidencia").Value
+    ' Add a new attachment.
+    rsPictures.AddNew
+    rsPictures.Fields("FileData").LoadFromFile diretorio
+    rsPictures.Update
+    ' Update the parent record
+    record.Update
+End Function
+
+Public Function salvarAnexosEmPasta(diretorio) As Boolean
+    Dim db As DAO.Database
+    Dim record As DAO.Recordset
+   
+   'Instantiate the parent recordset.
+   Set rsEmployees = db.OpenRecordset("anexo")
+   '… Code to move to desired employee
+   ' Instantiate the child recordset.
+   Set rsPictures = rsEmployees.Fields("evidencia").Value
+   '  Loop through the attachments.
+   While Not rsPictures.EOF
+      '  Save current attachment to disk in the "My Documents" folder.
+      rsPictures.Fields("FileData").SaveToFile "C:\Documents and Settings\Username\My Documents"
+      rsPictures.MoveNext
+   Wend
+End Function
