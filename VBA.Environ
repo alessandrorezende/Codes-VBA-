@@ -1,0 +1,25 @@
+Sub EnumEnvironVars()
+'description:
+'input:
+'output:
+
+    Dim strVar As String
+    Dim i As Long
+    For i = 1 To 255
+        strVar = Environ$(i)
+        If LenB(strVar) = 0& Then Exit For
+        Debug.Print strVar
+    Next
+End Sub
+
+'''''''''''
+example:
+OS=Windows_NT
+Path=C:\Program Files\Microsoft Office\Office14\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\PROGRA~1\E!PC;C:\Program Files\Common Files\Attachmate Shared
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+PROCESSOR_ARCHITECTURE=x86
+PROCESSOR_IDENTIFIER=x86 Family 6 Model 58 Stepping 9, GenuineIntel
+PROCESSOR_LEVEL=6
+PROCESSOR_REVISION=3a09
+ProgramData=C:\ProgramData
+ProgramFiles=C:\Program Files
