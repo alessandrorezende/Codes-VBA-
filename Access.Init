@@ -1,0 +1,16 @@
+'mostrar o painel de navegação
+DoCmd.LockNavigationPane True
+DoCmd.NavigateTo "acNavigationCategoryObjectType"
+DoCmd.Minimize
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'pegar nomes dos formularios do projeto
+For i = 0 To CurrentProject.AllForms.Count - 1
+    formularioDAO.inserirNomeFormulario (CStr(CurrentProject.AllForms.Item(i).Name))
+Next i
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Dim db As Database
+Set db = CurrentDb
+db.Properties("AppIcon").Value = CurrentProject.Path & "\imagem\logo_bradesco.ico"
+db.Properties("AppTitle").Value = "Categorizador TSC"
+db.Properties("UseAppIconForFrmRpt").Value = True
+Application.RefreshTitleBar
