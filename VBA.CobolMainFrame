@@ -1,0 +1,51 @@
+Public Sys As Object, Ses1 As Object, Screen1 As Object
+Public strPathSession as String
+
+Public Sub OpenMainframe(User As String, Password As String)
+
+   Set Sess = GetObject(strPathSession)
+   Set Tela = Sess.Screen
+   
+    With Tela
+        .PutString "NOMETELA", 20, 1
+        .SendKeys ("<Enter>")
+        .waithostquiet (800)
+        .SendKeys ("<CLEAR>")
+        .waithostquiet (800)
+        .PutString "NOMETELA", 1, 1
+        .SendKeys ("<Enter>")
+        .waithostquiet (800)
+    
+        If UCase(Tela.getString(10, 11, 4)) = "USER" Then
+            Usuario = User
+            .PutString User, 10, 26
+            .PutString Password, 11, 26
+            .SendKeys ("<Enter>")
+            .waithostquiet (800)
+        Else
+            MsgBox ("Erro ao conectar, verifique usuário e senha!")
+            Exit Sub
+        End If
+    End With
+End Sub
+
+Public Sub Sair()
+    If blnProcess = True Then
+        With Tela
+        .SendKeys ("<CLEAR>")
+        .waithostquiet (50)
+        .SendKeys ("<CLEAR>")
+        .waithostquiet (50)
+        .SendKeys ("<CLEAR>")
+        .waithostquiet (50)
+        .PutString "LOGOFF", 1, 1
+        .SendKeys ("<ENTER>")
+        End With
+    End If
+End Sub
+
+Public Sub KillObjects()
+    Set Tela = Nothing
+    Set Ses1 = Nothing
+    Set Sys = Nothing
+End Sub
