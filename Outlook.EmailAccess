@@ -1,0 +1,311 @@
+
+Sub getTodosDadosEmail(filePath, dataInicial, dataFinal)
+'''
+'abrir um determinado email
+'''
+Dim planilhaCola As String 'nome da planilha onde joga os dados
+Dim myDate As String
+Dim excelApp As Excel.Application
+Dim excelBook As Excel.Workbook
+Dim excelSheet As Excel.Worksheet
+Dim dtI, dtF, dtA As Date
+Dim dtR As Variant
+
+Set excelApp = CreateObject("Excel.Application")
+Set excelBook = excelApp.Workbooks.Add
+Set excelSheet = excelBook.Worksheets(1)
+    myDate = Format(Date, "dd-mm-yyyy")
+
+    Set myNamespace = Application.GetNamespace("MAPI")
+    Set myFolder = myNamespace.GetDefaultFolder(olFolderInbox)
+
+    dtI = CDate(dataInicial)
+    dtF = CDate(dataFinal)
+
+    planilhaCola = "Email_" & myDate & ".xlsx"
+    excelSheet.SaveAs filePath & planilhaCola
+    excelSheet.Application.Quit
+    excelApp.Quit
+    
+    Workbooks.Open Filename:=filePath & planilhaCola
+    Windows(planilhaCola).Activate
+    contar = 1
+    Sheets("Plan1").Name = "Emails"
+    Sheets("Emails").Select
+    
+    
+    Range("A" & contar).Select
+    ActiveCell.FormulaR1C1 = "Data recebimento"
+    Range("B" & contar).Select
+    ActiveCell.FormulaR1C1 = "Assunto"
+    Range("C" & contar).Select
+    ActiveCell.FormulaR1C1 = "Tipo"
+    Range("D" & contar).Select
+    ActiveCell.FormulaR1C1 = "De"
+    Range("E" & contar).Select
+    ActiveCell.FormulaR1C1 = "Para"
+    Range("F" & contar).Select
+    ActiveCell.FormulaR1C1 = "Com cópia"
+    
+    contar = 2
+    For Each mensagem In myFolder.Items
+    dtR = Split(mensagem.ReceivedTime, " ")
+    dtA = CDate(dtR(0))
+    
+    If dtA >= dtI And dtA <= dtF Then
+    'data do recebimento
+    Range("A" & contar).Select
+    ActiveCell.FormulaR1C1 = mensagem.ReceivedTime
+    'assunto
+    Range("B" & contar).Select
+    ActiveCell.FormulaR1C1 = mensagem.Subject
+    'tipo
+    If mensagem.Categories = "Categoria Azul" Or mensagem.Categories = "Blue Category" Then
+    Range("C" & contar).Select
+    ActiveCell.FormulaR1C1 = "Solicitação"
+    Else
+    Range("C" & contar).Select
+    ActiveCell.FormulaR1C1 = "c/ Nome"
+    End If
+    
+    'quem envia
+    Range("D" & contar).Select
+    ActiveCell.FormulaR1C1 = mensagem.SenderName
+    'para
+    Range("E" & contar).Select
+    ActiveCell.FormulaR1C1 = mensagem.To
+    
+    'com copia
+    Range("F" & contar).Select
+    ActiveCell.FormulaR1C1 = mensagem.CC
+    
+    'corpo do email
+    'Range("G" & contar).Select
+    'ActiveCell.FormulaR1C1 = mensagem.Body
+    
+    contar = contar + 1
+    End If
+    Next
+    Columns("A:G").Select
+    Columns("A:G").EntireColumn.AutoFit
+    Rows("1:1").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorLight1
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Selection.Font.Bold = True
+    With Selection.Font
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = 0
+    End With
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    ActiveWorkbook.Save
+    ActiveWindow.Close
+    Windows(planilhaCola).Close
+    MsgBox "Processo finalizado!"
+
+    ' Fecha o Excel com o método Quit no objeto Application
+     'excelSheet.Application.Quit
+Set excelApp = Nothing
+Set excelBook = Nothing
+Set excelSheet = Nothing
+End Sub
+
+
+Public Function getDiretorioBase(diretorio As String) As String
+'''
+'funcao para saber qual a ultima posicao de determinado caracter "\"
+'input: caminho do diretorio completo
+'output: ultima pasta finalizando com \
+'pos = InStr(teste, "\") saber posição da primeria ocorrencia de um caracter
+'pos = InStrRev(teste, "\") saber a ultima posicao de um determinado caracter
+'Debug.Print Left$(diretorio, pos)
+'''
+    Dim pos As Integer
+    pos = InStrRev(diretorio, "\")
+    getDiretorioBase = Left$(diretorio, pos)
+End Function
+
+
+Sub getAlgunsDadosEmail(filePath, dataInicial, dataFinal)
+'''
+'abrir um determinado email
+'''
+Dim planilhaCola As String 'nome da planilha onde joga os dados
+Dim myDate As String
+Dim excelApp As Excel.Application
+Dim excelBook As Excel.Workbook
+Dim excelSheet As Excel.Worksheet
+Dim dtI, dtF, dtA As Date
+Dim dtR As Variant
+Dim analistas(5) As Variant
+Dim emailPessoal As Boolean
+
+Set excelApp = CreateObject("Excel.Application")
+Set excelBook = excelApp.Workbooks.Add
+Set excelSheet = excelBook.Worksheets(1)
+    myDate = Format(Date, "dd-mm-yyyy")
+    
+    If formEmail.selectAnalista.ListIndex = 0 Then
+      analistas(1) = "CRAG"
+      analistas(2) = "SM - Alessandro"
+      analistas(3) = "SM - Aline"
+      analistas(4) = "SM - Paula"
+      emailPessoal = False
+    End If
+    If formEmail.selectAnalista.ListIndex = 1 Then
+      analistas(0) = "Inbox - Pessoal"
+      emailPessoal = True
+    End If
+
+    If formEmail.selectAnalista.ListIndex = 3 Then
+      analistas(2) = "SM - Alessandro"
+      emailPessoal = False
+    End If
+
+
+    'Set myNamespace = Application.GetNamespace("MAPI")
+    'Set myFolder = myNamespace.GetDefaultFolder(olFolderInbox)
+    
+    dtI = CDate(dataInicial)
+    dtF = CDate(dataFinal)
+
+    planilhaCola = "Email_" & myDate & ".xlsx"
+    excelSheet.SaveAs filePath & planilhaCola
+    excelSheet.Application.Quit
+    excelApp.Quit
+    
+    Workbooks.Open Filename:=filePath & planilhaCola
+    Windows(planilhaCola).Activate
+    contar = 1
+    Sheets("Plan1").Name = "Emails"
+    Sheets("Emails").Select
+    
+    Range("A" & contar).Select
+    ActiveCell.FormulaR1C1 = "Data recebimento"
+    Range("B" & contar).Select
+    ActiveCell.FormulaR1C1 = "Tipo"
+    Range("C" & contar).Select
+    ActiveCell.FormulaR1C1 = "Analista"
+    Range("D" & contar).Select
+    ActiveCell.FormulaR1C1 = "Assunto"
+    contar = 2
+    Set myNamespace = Application.GetNamespace("MAPI")
+    
+    'For Each Folder In myNamespace.Folders
+    'MsgBox CStr(Folder.Name)
+    'Next
+    '' Application.GetNamespace("MAPI").Folders.
+    
+    ''pegar o folder especifico
+    ''For Each Folder In myNamespace.Folders
+    ''MsgBox CStr(Folder.Name)
+    ''Next
+    
+    For Each pasta In analistas
+    If pasta <> "" Then
+    If emailPessoal = False Then
+    Set myFolder = myNamespace.Folders("CRAG").Folders("Inbox").Folders(pasta)
+    Else
+    Set myFolder = myNamespace.GetDefaultFolder(olFolderInbox)
+    End If
+    
+    
+    For Each mensagem In myFolder.Items
+    'dtR = Split(mensagem.ReceivedTime, " ")
+    dtR = Split(mensagem.LastModificationTime, " ")
+    dtA = CDate(dtR(0))
+    
+    If dtA >= dtI And dtA <= dtF Then
+    'data do recebimento
+    Range("A" & contar).Select
+    'ActiveCell.FormulaR1C1 = mensagem.ReceivedTime
+    ActiveCell.FormulaR1C1 = mensagem.LastModificationTime
+    'tipo
+    If mensagem.Categories = "Categoria Azul" Or mensagem.Categories = "Blue Category" Then
+    Range("B" & contar).Select
+    ActiveCell.FormulaR1C1 = "Solicitação"
+    Else
+    Range("B" & contar).Select
+    ActiveCell.FormulaR1C1 = "c/ Nome"
+    End If
+    'analista
+    If pasta = "SM - Alessandro" Then
+     Range("C" & contar).Select
+     ActiveCell.FormulaR1C1 = "Alessandro"
+    'ActiveCell.FormulaR1C1 = myNamespace.CurrentUser
+    ElseIf pasta = "SM - Aline" Then
+     Range("C" & contar).Select
+     ActiveCell.FormulaR1C1 = "Aline"
+    ElseIf pasta = "SM - Paula" Then
+     Range("C" & contar).Select
+     ActiveCell.FormulaR1C1 = "Paula"
+    ElseIf pasta = "CRAG" Then
+     Range("C" & contar).Select
+     ActiveCell.FormulaR1C1 = "CRAG"
+    End If
+    
+    'assunto
+    Range("D" & contar).Select
+    ActiveCell.FormulaR1C1 = mensagem.Subject
+    
+    'corpo do email
+    'Range("G" & contar).Select
+    'ActiveCell.FormulaR1C1 = mensagem.Body
+    
+    contar = contar + 1
+    End If
+    Next
+    End If
+    Next
+    '---------------------------------------
+    Columns("A:G").Select
+    Columns("A:G").EntireColumn.AutoFit
+    Rows("1:1").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorLight1
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Selection.Font.Bold = True
+    With Selection.Font
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = 0
+    End With
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    ActiveWorkbook.Save
+    ActiveWindow.Close
+    Windows(planilhaCola).Close
+    MsgBox "Processo finalizado!"
+
+    ' Fecha o Excel com o método Quit no objeto Application
+     'excelSheet.Application.Quit
+Set excelApp = Nothing
+Set excelBook = Nothing
+Set excelSheet = Nothing
+End Sub
