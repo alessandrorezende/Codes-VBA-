@@ -10,7 +10,7 @@ Next i
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Dim db As Database
 Set db = CurrentDb
-db.Properties("AppIcon").Value = CurrentProject.Path & "\imagem\logo_bradesco.ico"
-db.Properties("AppTitle").Value = "Categorizador TSC"
+db.Properties("AppIcon").Value = CurrentProject.Path & "\imagem\logo.ico"
+db.Properties("AppTitle").Value = "Nome app"
 db.Properties("UseAppIconForFrmRpt").Value = True
 Application.RefreshTitleBar
