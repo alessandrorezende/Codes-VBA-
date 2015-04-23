@@ -1,0 +1,83 @@
+Public Sub InternetExplorerAccess()
+
+    On Error GoTo ShowError
+    
+    Dim appIE As Object
+    Dim UserN As Variant
+    Dim PW As Variant
+    Dim ElementCol As Variant
+    Dim url As String
+
+    Application.ScreenUpdating = False
+    Set appIE = CreateObject("InternetExplorer.Application")
+
+    url = "https://login.microsoftonline.com/login.srf?wa=wsignin1%2E0&rpsnv=4&ct=1427482933&rver=6%2E1%2E6206%2E0&wp=MBI&wreply=https%3A%2F%2Falgarnet%2Esharepoint%2Ecom%2F%5Fforms%2Fdefault%2Easpx%3Fapr%3D1&lc=1033&id=500046"
+    
+    appIE.Navigate (url)
+    appIE.StatusBar = False
+    appIE.Toolbar = False
+    appIE.Visible = True
+    appIE.Resizable = False
+    appIE.AddressBar = True
+
+
+    ' loop until the page finishes loading
+    Do While appIE.Busy
+    DoEvents
+    Loop
+     
+    ' enter username and password in textboxes
+    Set UserN = appIE.Document.GetElementsByName("login")
+    If Not UserN Is Nothing Then
+        ' fill in first element named "username", assumed to be the login name field
+        UserN(0).Select
+        UserN(0).Value = "nome@server.com"
+    End If
+     
+    Set PW = appIE.Document.GetElementsByName("passwd")
+    ' password
+    If Not PW Is Nothing Then
+        ' fill in first element named "password", assumed to be the password field
+        PW(0).Select
+        PW(0).Value = "senha"
+    End If
+    
+    'Executar botão entrar
+    appIE.Document.getElementById("cred_sign_in_button").Select
+    appIE.Document.getElementById("cred_sign_in_button").FireEvent ("Onclick")
+    DoEvents
+    
+    'appIE.Document.getElementById("cred_sign_in_button").FireEvent ("onmousedown")
+    'appIE.Document.getElementById("cred_sign_in_button").FireEvent ("Onchange")
+    'appIE.Document.getElementById("cred_sign_in_button").FireEvent ("Onclick")
+    'appIE.Document.getElementById("cred_sign_in_button").FireEvent ("onmousedown")
+    'appIE.Document.getElementById("cred_sign_in_button").FireEvent ("onmouseup")
+    
+    
+    ' loop until the page finishes loading
+    Do While appIE.Busy
+        DoEvents
+    Loop
+
+    Application.ScreenUpdating = True
+
+ShowError:
+    If Err.Number <> 0 Then
+        Dim msg As String
+        msg = "Erro # " & Str(Err.Number) & " foi gerado por " & Err.Source & Chr(13) & Err.Description
+        MsgBox msg, , "Erro", Err.HelpFile, Err.HelpContext
+    End If
+End Sub
+
+Function GetElementsById(ie As Object, elementName As String) As Object
+  Set GetElementsById = ie.Document.getElementById(elementName)
+End Function
+
+Function GetElementsByName(ie As Object, elementName As String) As Object
+  Set GetElementsByName = ie.Document.GetElementsByName(elementName)
+End Function
+
+Function GetElementsByTagName(ie As Object, tagName As String) As Object
+'SPAN;A;INPUT
+  Set GetElementsByTagName = ie.Document.GetElementsByTagName(tagName)
+End Function
