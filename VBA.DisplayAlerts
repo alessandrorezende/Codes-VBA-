@@ -1,0 +1,3 @@
+Application.DisplayAlerts = False
+Workbooks("BOOK1.xls").Close
+Application.DisplayAlerts = True
