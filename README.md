@@ -1,7 +1,6 @@
 # Codes write in VBA
 
-# All codes write in VBA (Visual Basic For Application)
-# General use
+All codes write in VBA (Visual Basic For Application)
 
 + Access Codes
 + Excel Codes
