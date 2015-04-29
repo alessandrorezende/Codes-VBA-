@@ -33,3 +33,4 @@ If (Err.LastDllError = ERROR_ALREADY_EXISTS) Then
  'Terminate the application via the reference to it, its hObject value 
  CloseHandle mutexvalue 
 End If 
+
