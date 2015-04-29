@@ -1,0 +1,35 @@
+#Using the Mutex - Detecting if your application is already running
+
+#Cut and Paste the function and variable declarations into the 
+#header of your VB application, and drop the execution code into 
+#the starting function of your application, either the form_load(), or main() method. 
+
+'DLL Function Calls 
+
+Private Declare Function CreateMutex Lib "kernel32" Alias "CreateMutexA" (ByVal lpMutexAttributes As Long, ByVal bInitialOwner As Long, ByVal lpName As String) As Long 
+Private Declare Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long 
+  
+'variable constant to match if the mutex exists 
+Private Const ERROR_ALREADY_EXISTS = 183& 
+  
+'Application Variable Declarations 
+Public Const AppVer = "MyApp v1.1" 
+Dim mutexvalue As Long 
+  
+'*the following code would go in the starting function of your application 
+'either the main() or form_load() depending on how your application works 
+  
+ 'Create an individual mutex value for the application 
+mutexvalue = CreateMutex(ByVal 0&, 1, AppVer) 
+  
+'If an error occured creating the mutex, that means it 
+'must have already existed, therefore your application 
+'is already running 
+If (Err.LastDllError = ERROR_ALREADY_EXISTS) Then 
+  
+ 'Inform the user of running the same app twice 
+ MsgBox "The application is already running." 
+  
+ 'Terminate the application via the reference to it, its hObject value 
+ CloseHandle mutexvalue 
+End If 
