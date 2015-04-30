@@ -1,0 +1,48 @@
+https://support.microsoft.com/en-us/kb/283874
+https://www.connectionstrings.com/access/
+http://www.pcreview.co.uk/threads/how-to-open-a-password-encrypted-accdb-file-in-access-2007-using.3120564/
+###############################################################################################
+References:
+Microsoft ActiveX Data Objects 2.0 Library
+Microsoft ADO Ext. 6.0 for DDL and Security
+###############################################################################################
+
+Sub CreateJetDB()
+
+Dim Cnnct1 As ADODB.Connection
+Dim rs As ADODB.Recordset
+
+Set Cnnct1 = New ADODB.Connection
+Set rs = New ADODB.Recordset
+
+With Cnnct1
+.Provider = "Microsoft.ACE.OLEDB.12.0"
+.Properties("Data Source") = "C:\Users\Alessandro\Desktop\disputaInternacional.accdb"
+.Properties("User ID") = "Admin"
+.Properties("Jet OLEDB:Database Password") = "1234"
+.Open
+End With
+Cnnct1.Execute "CREATE TABLE tblSequential (col1 long, col2 text(75));"
+
+'Open the new table.
+rs.Open "tblSequential", Cnnct1, adOpenDynamic, _
+adLockOptimistic, adCmdTableDirect
+
+' Add sample records to the tblSequential table.
+For i = 0 To 10
+rs.AddNew
+rs.Fields("col1").Value = i
+rs.Fields("col2").Value = "value_" & i
+rs.Update
+Next i
+rs.Close
+
+'Create a multifield Index on col1 and col2.
+Cnnct1.Execute "CREATE INDEX idxSeqInt on tblSequential (col1, col2);"
+
+'Close the connection
+Cnnct1.Close
+
+End Sub
+
+
