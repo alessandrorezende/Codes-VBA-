@@ -30,16 +30,26 @@ adLockOptimistic, adCmdTableDirect
 
 ' Add sample records to the tblSequential table.
 For i = 0 To 10
-rs.AddNew
-rs.Fields("col1").Value = i
-rs.Fields("col2").Value = "value_" & i
-rs.Update
+  rs.AddNew
+  rs.Fields("col1").Value = i
+  rs.Fields("col2").Value = "value_" & i
+  rs.Update
 Next i
-rs.Close
 
 'Create a multifield Index on col1 and col2.
 Cnnct1.Execute "CREATE INDEX idxSeqInt on tblSequential (col1, col2);"
 
+'Create a select to test
+strSql = "SELECT col1 FROM tblSequential;"
+rs.Open strSql, Cnnct1
+
+Do While Not rs.EOF
+  Debug.Print rs!col1
+  rs.MoveNext
+Loop
+
+'Close the recordset
+rs.Close
 'Close the connection
 Cnnct1.Close
 
