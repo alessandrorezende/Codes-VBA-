@@ -1,0 +1,45 @@
+Sub Initialization()
+'description: Inicializar o nome da aplicação e icone
+'input:
+'output:
+
+    Dim diretorioIcone As String
+    Dim intX As Integer
+    Const DB_Text As Long = 10
+    
+    diretorioIcone = appDAO.getIconeAnexo
+    intX = AddProperty("AppTitle", DB_Text, nomeApp)
+    intX = AddProperty("AppIcon", DB_Text, diretorioIcone)
+    CurrentDb.Properties("UseAppIconForFrmRpt") = True
+    Application.RefreshTitleBar
+
+End Sub
+
+Function AddProperty(strName As String, varType As Variant, varValue As Variant) As Integer
+'description: Função para adicionar propriedade
+'input:
+'output:
+
+    Dim dbs As Object, prp As Variant
+    Const conPropNotFoundError = 3270
+
+    Set dbs = CurrentDb
+    On Error GoTo AddProp_Err
+    
+    dbs.Properties(strName) = varValue
+    AddAppProperty = True
+
+AddProp_Bye:
+    dbs.Close
+    Exit Function
+
+AddProp_Err:
+    If Err = conPropNotFoundError Then
+        Set prp = dbs.CreateProperty(strName, varType, varValue)
+        dbs.Properties.Append prp
+        Resume
+    Else
+        AddAppProperty = False
+        Resume AddProp_Bye
+    End If
+End Function
