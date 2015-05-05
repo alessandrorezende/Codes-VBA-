@@ -1,4 +1,4 @@
-'mostrar o painel de navegação
+'não mostrar o painel de navegação
 DoCmd.LockNavigationPane True
 DoCmd.NavigateTo "acNavigationCategoryObjectType"
 DoCmd.Minimize
@@ -8,9 +8,11 @@ For i = 0 To CurrentProject.AllForms.Count - 1
     formularioDAO.inserirNomeFormulario (CStr(CurrentProject.AllForms.Item(i).Name))
 Next i
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'alterar propriedades do access
 Dim db As Database
 Set db = CurrentDb
 db.Properties("AppIcon").Value = CurrentProject.Path & "\imagem\logo.ico"
 db.Properties("AppTitle").Value = "Nome app"
 db.Properties("UseAppIconForFrmRpt").Value = True
 Application.RefreshTitleBar
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
