@@ -1,0 +1,32 @@
+    Set banco = CurrentDb
+    ' Instantiate the parent recordset
+    Set record = banco.OpenRecordset("SELECT icone FROM app WHERE codigo=2", dbOpenDynaset)
+    ' Edit line
+    record.Edit
+    ' Instantiate the child recordset
+    Set rsPictures = record.Fields("icone").value
+    
+    If rsPictures.EOF = False Then
+        While Not rsPictures.EOF
+            'Save current attachment to disk in the "temp" folder.
+            diretorioTemp = diretorioLocal
+            Utilidade.excluirArquivoSeExistir (diretorioTemp & rsPictures.FileName)
+            rsPictures.Fields("FileData").SaveToFile diretorioTemp
+            
+            If rsPictures.FileName = "loading.gif" Then
+                imageGif = diretorioTemp & rsPictures.FileName
+                imageLoading = True
+                
+            ElseIf imageLoading = True Then
+                GoTo encontrou
+            Else
+                imageIcone = diretorioTemp & rsPictures.FileName
+            End If
+            
+            rsPictures.MoveNext
+        Wend
+encontrou:
+        existeAnexo = True
+    Else
+        existeAnexo = False
+    End If
