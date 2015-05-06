@@ -1,0 +1,46 @@
+'O código a seguir ilustra como o FileSystemObject é usado para retornar 
+'um objeto TextStream que pode ser lido de ou gravado para:
+
+Set fs = CreateObject("Scripting.FileSystemObject")
+Set a = fs.CreateTextFile("c:\arqteste.txt", True)
+a.WriteLine("Isto é um teste.")
+a.Close
+
+
+'O código a seguir ilustra o uso da propriedade DateLastAccessed com um arquivo:
+Sub ShowFileAccessInfo(filespec)
+    Dim fs, f, s
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set f = fs.GetFile(filespec)
+    s = UCase(filespec) & vbCrLf
+    s = s & "Criado em: " & f.DateCreated & vbCrLf
+    s = s & "Data do último acesso: " & f.DateLastAccessed & vbCrLf
+    s = s & "Data da última modificação: " & f.DateLastModified
+    MsgBox s, 0, "Informações de acesso ao arquivo"
+End Sub
+
+'O código a seguir ilustra o uso da propriedade Path com um objeto File:
+Sub ShowFileAccessInfo(filespec)
+    Dim fs, d, f, s
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set f = fs.GetFile(filespec)
+    s = UCase(f.Path) & vbCrLf
+    s = s & "Criado em: " & f.DateCreated & vbCrLf
+    s = s & "Data do último acesso: " & f.DateLastAccessed & vbCrLf
+    s = s & "Data da última modificação: " & f.DateLastModified
+    MsgBox s, 0, "Informações de acesso ao arquivo"
+End Sub
+
+
+'O código a seguir ilustra o uso da propriedade AvailableSpace:
+Sub ShowAvailableSpace(drvPath)
+    Dim fs, d, s
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set d = fs.GetDrive(fs.GetDriveName(drvPath))
+    s = "Unidade " & UCase(drvPath) & " - "
+    s = s & d.VolumeName  & vbCrLf
+    s = s & "Espaço disponível: " & FormatNumber(d.AvailableSpace/1024, 0)
+    s = s & " Kbytes"
+    MsgBox s
+End Sub
+
