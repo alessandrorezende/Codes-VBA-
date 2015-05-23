@@ -1,0 +1,138 @@
+# WMI (Windows Management Instrumentation - instrumentação de gerenciamento do Windows).
+
+VBA e WMI podemos fazer muitas coisas que não são possíveis usando 
+o Windows API. O WMI é tão poderoso que é preciso ter cuidado para 
+não fazermos alguns estragos sérios nos computadores 
+sob a nossa responsabilidade quer localmente, 
+quer num PC remoto ou mesmo num Servidor Windows!
+
+Por que o WMI é tão poderoso?
+"O WMI é a principal tecnologia de gestão de habilitação embutido 
+nos família de sistemas operacionais Windows 2000, Windows XP e Windows Server 2003. 
+Estão baseados em padrões supervisionados pelo Distributed 
+Management Task Force (DMTF), o WMI é a ferramenta e o encanamento 
+através do qual todos, ou  quase todos, os recursos do Windows 
+podem ser acessados, configurados, gerenciados e monitorados. "
+
+Segue uma lista das coisas que podemos fazer localmente ou através de acesso remoto:
+Gerenciar usuários e Políticas de Grupo
+(Manage Users and Group Policies)
+
+Ler e salvar logs de eventos em arquivos
+(Read and save Event Logs to files)
+
+Obter o tamanho de memória livre de um disco rígido
+
+(Get the size of a hard drive's free Memory)
+
+Obter a versão do Microsoft Office
+(Get the Version of Microsoft Office)
+
+Obter os atributos das Impressoras
+(Get the attributes of Printers)
+
+Obter a versão do OSSP
+(Get the Operating System Service Pack Version (CSDVersion–ServicePackLast))
+
+Obter o nome do SO
+(Get the Operating System Name)
+
+Obter a versão do SO
+(Get the Operating System Version Number)
+
+Obter a versão do compilação do SO
+(Get the Operating System Build Number)
+
+Obter o número de série do produto Windows OS
+(Windows Operating System Product/Serial Number)
+
+Ter ciência dos Jobs agendadas
+(Get Scheduled Jobs)
+
+Conte processos em execução
+(Count Running Processes)
+
+Lista dos processos em execução
+(List Running Processes)
+
+Encerrar processos
+(Terminate Processes)
+
+Deletar softwares
+
+Instalar softwares
+
+Atualizar software
+
+Lista de todos os software Windows instalado
+(List all Windows installed software)
+
+Lista todas as IDs dos produtos Microsoft instalados
+(List Microsoft software Product IDs)
+
+Retorna o nome do Usuário Registado
+Get the Registered User
+
+######################################################################################
+
+Function ProcessorIDs() As String
+
+    ' Usando late binding para evitar um problema de referência - late binding
+
+    Dim strComputer As String
+
+    Dim objWMIService As Object
+    Dim colItems As Object
+    Dim objItem As Object
+    Dim strProcessorIDs As String
+
+    Let strComputer = "."
+
+    Set objWMIService = GetObject("winmgmts:" _
+        & "{impersonationLevel=impersonate}!\\" _
+        & strComputer & "\root\cimv2")
+
+    Set colItems = objWMIService.ExecQuery( _
+        "SELECT * FROM Win32_Processor", , 48)
+        
+    For Each objItem In colItems
+        Let strProcessorIDs = strProcessorIDs & ";" & Nz(objItem.ProcessorID, "")
+    Next
+    
+    ' Remove the leading ; from the string  
+    Do While Left(strProcessorIDs, 1) = ";"
+        Let strProcessorIDs = Right(strProcessorIDs, (Len(strProcessorIDs) - 1))
+    Loop
+   
+    Let ProcessorIDs = strProcessorIDs
+
+    Set objItem = Nothing
+    Set colItems = Nothing
+    Set objWMIService = Nothing
+
+End Function
+
+
+
+Function StartSafe() As Boolean
+    Dim strProcessorID As String
+
+    ' Get the stored ProcessorIDs from
+    ' the custom Database property
+    strProcessorID = GetDBPropValue("dbPrpProcessorID")
+
+
+
+    If InStr(1, ProcessorIDs, strProcessorID) > 0 Then
+        StartSafe= True
+    Else
+        StartSafe= False
+        ' The database has been copied to an unauthorized computer!
+        ' Delete the Back End Database to protect your data
+        ' Uncomment the next line of code to delete the back end database
+        'Kill (CurrentProject.Path & "\BackEndDB.mdb")
+        ' If this is the back end add code to Delete all tables
+        ' Add code to Delete all Modules
+        DoCmd.Quit
+    End If
+End Function
